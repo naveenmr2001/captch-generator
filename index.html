@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="path/to/fontawesome.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Captch Generator</title>
+</head>
+    <section class="main-container">
+        <div class="wrapper">
+            <div class="wrapper-reload">
+                <canvas id="canvas" width="200" height="70" class="captch-text"></canvas>
+                <button class="reload"><i class="fa-sharp fa-solid fa-arrow-rotate-right" style="color: #ffffff;"></i></button>
+            </div>
+            <input type="text" class="inputform" placeholder="Enter the text in the image">
+            <button class="submit">Submit</button>
+        </div>
+    </section>
+    <script>
+        let submitBtn = document.getElementsByClassName("submit")[0];
+        let reload = document.getElementsByClassName("reload")[0];
+        let canvas = document.getElementById("canvas");
+        let userInput = document.getElementsByClassName("inputform")[0];
+        console.log(submitBtn);
+        console.log(reload);
+        console.log(canvas);
+        console.log(userInput);
+        let text = "";
+        const randomGenerate = () =>{
+            let generatedNumber = ""
+            for(let i=0;i<3;i++){
+                generatedNumber += String.fromCharCode(generateFunction(65,90));
+
+                generatedNumber += String.fromCharCode(generateFunction(97,122));
+
+                generatedNumber += String.fromCharCode(generateFunction(48,57));
+            }
+            return generatedNumber;
+        }
+        const generateFunction = (min,max) =>
+            Math.floor(Math.random()*(max-min+1)+min);
+        
+        const drawLetterOnCanva = (string) =>{
+            let ctsobject = canvas.getContext("2d");
+
+            ctsobject.clearRect(0, 0, ctsobject.canvas.width, ctsobject.canvas.height);
+
+            const colorArray = ["rgb(0,0,0)","rgb(130,130,130)"];
+            
+            const textSpace = 150/string.length;
+
+            for(let i=0;i<string.length;i++){
+                const xInitialSpace = 25;
+                //Set font for canvas element
+                ctsobject.font = "20px Roboto Mono";
+                //set text color
+                ctsobject.fillStyle = colorArray[generateFunction(0, 1)];
+                ctsobject.fillText(
+                string[i],
+                xInitialSpace + i * textSpace,
+                generateFunction(25, 40),
+                100
+                );
+            }
+        }
+        function triggerFunction() {
+            userInput.value = "";
+            text = randomGenerate();
+            console.log(text);
+            text = [...text].sort(() => Math.random() - 0.5).join("");
+            drawLetterOnCanva(text);
+        }
+
+        reload.addEventListener("click", triggerFunction);
+
+        window.onload = () => triggerFunction();
+
+        submitBtn.addEventListener("click", () => {
+
+        if (userInput.value === text) {
+            alert("Success");
+        } else {
+            alert("Incorrect");
+            triggerFunction();
+        }
+        });
+    </script>
+<body>
+</body>
+</html>
